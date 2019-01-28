@@ -14,18 +14,10 @@ import java.net.Socket;
 
 /**
  *
- * @author Carlos Andrés Castaneda Lozano
+ * @author 2112107
  */
 public class server {
 
-/**
-     * Metodo main, metodo principal de la clase HttpServer.
-     * Crea un servidor y un cliente Socket, y asigna un puerto
-     * para el servidor web.
-     * 
-     * @param args
-     * @throws IOException
-     */
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
         Integer port;

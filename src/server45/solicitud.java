@@ -11,28 +11,21 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Carlos Andres Castaneda Lozano
+ * @author AsusPC
  * 
- * Clase Multisolicitud 
+ * 
  * 
  */
 public class solicitud extends Thread{
     private Socket clientSocket;
     
-    /**
-     * Constructor, crea el cliente Socket
-     * @param clientSocket 
-     */
+    
     
      public solicitud(Socket clientSocket) {
         this.clientSocket = clientSocket;
     
         
-    /**
-     * Metodo Run, recibe las peticiones de cliente
-     * saca el recurso utilizado, puede ser un archivo .html o
-     * una imagen .png
-     */
+  
     }
     @Override
     public void run(){
