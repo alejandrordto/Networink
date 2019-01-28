@@ -45,7 +45,7 @@ public class server {
                 System.exit(1);
             }
             solicitud multi = new solicitud(clientSocket);
-            multi.start();
+            multi.run();
         }
 
     }

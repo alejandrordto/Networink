@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +18,7 @@ import java.util.logging.Logger;
  * 
  * 
  */
-public class solicitud extends Thread{
+public class solicitud {
     private Socket clientSocket;
     
     
@@ -27,51 +29,78 @@ public class solicitud extends Thread{
         
   
     }
-    @Override
+    
     public void run(){
         try {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            String inputLine = in.readLine();
-            String outputLine,formato,resultado;
+            String inputLine, outputLine;
+            String inputu = null;
+            String format = null;
+            String data = null;
             byte[] bytes = null;
-            if (inputLine != null) {
-                inputLine = inputLine.split(" ")[1];
-                if (inputLine.endsWith(".html")) {
-                    bytes = Files.readAllBytes(new File("./" + inputLine).toPath());
-                    resultado = "" + bytes.length;
-                    formato = "text/html";
-                } else if (inputLine.endsWith(".png")) {
-                    bytes = Files.readAllBytes(new File("./" + inputLine).toPath());
-                    resultado = "" + bytes.length;
-                    formato = "image/png";
+            while ((inputLine = in.readLine()) != null) {
+                try {
+                    if (inputLine.startsWith("GET")) {
+                        inputu = inputLine;
+                    }
+                } catch (java.lang.StringIndexOutOfBoundsException e) {
+                }
+                //System.out.println(inputLine);
+                if (!in.ready()) {
+                    break;
+                }
+            }
+            if (inputu != null) {
+                String[] temp;
+                temp = inputu.split(" ");
+                String flag = "";
+                try {
+                if (temp[1].endsWith(".html")) {
+                    bytes = Files.readAllBytes(new File("./" + temp[1].substring(1)).toPath());
+                    data = "" + bytes.length;
+                    format = "text/html";
+                } else if (temp[1].endsWith("png")) {
+                    bytes = Files.readAllBytes(new File("./" + temp[1].substring(1)).toPath());
+                    data = "" + bytes.length;
+                    format = "image/png";
                 } else {
                     bytes = Files.readAllBytes(new File("./error.html").toPath());
-                    resultado = "" + bytes.length;
-                    formato = "text/html";
+                    data = "" + bytes.length;
+                    format = "text/html";
+                    
                 }
-            } else {
-                bytes = Files.readAllBytes(new File("./error.html").toPath());
-                resultado = "" + bytes.length;
-                formato = "text/html";
+                } catch (NoSuchFileException e){
+                    bytes = Files.readAllBytes(new File("./error.html").toPath());
+                    data = "" + bytes.length;
+                    format = "text/html";
+                }
+                inputu = flag;
             }
             outputLine = "HTTP/1.1 200 OK\r\n"
                     + "Content-Type: "
-                    + formato
+                    + format
                     + "\r\n"
-                    + resultado
+                    + "Content-Length: "
+                    + data
                     + "\r\n\r\n";
-            
-            byte[] hByte = outputLine.getBytes();
-            byte[] rta = new byte[bytes.length + hByte.length];
-            for (int i = 0; i < hByte.length; i++) {
-                rta[i] = hByte[i];
+            byte[] bite = outputLine.getBytes();
+            try {
+                byte[] salida = new byte[bytes.length + bite.length];
+                for (int i = 0; i < bite.length; i++) {
+                    salida[i] = bite[i];
+                }
+                for (int i = bite.length; i < bite.length + bytes.length; i++) {
+                    salida[i] = bytes[i - bite.length];
+                }
+                clientSocket.getOutputStream().write(salida);
+            } catch (java.lang.NullPointerException e) {
+
             }
-            for (int i = hByte.length; i < hByte.length + bytes.length; i++) {
-                rta[i] = bytes[i - hByte.length];
-            }
-            clientSocket.getOutputStream().write(rta);
             clientSocket.close();
-        } catch (IOException e) {
+
+        }
+         catch (IOException e) {
             Logger.getLogger(solicitud.class.getName()).log(Level.SEVERE, null, e);
         }
     }
