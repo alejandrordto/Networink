@@ -1,8 +1,9 @@
-# workshop1
-***Git Basic Concepts and Maven Basic Concepts***
+# Networking
+
+***Trabajando con URLs***
 ======
 
-*Laboratorio 1 ARSW*
+*Laboratorio 2 ARSW*
 
   Integrantes:
   -------
@@ -13,3 +14,5 @@
   Profesor:
   -------
   ##### SAAVEDRA ORJUELA DAVID ARMANDO
+
+*_Desarrollo del laboratorio:_*
