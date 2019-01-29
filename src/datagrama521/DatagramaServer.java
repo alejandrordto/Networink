@@ -40,6 +40,12 @@ public class DatagramaServer {
                 int port = packet.getPort();
                 packet = new DatagramPacket(buf, buf.length, address, port);
                 socket.send(packet);
+                
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(DatagramaServer.class.getName()).log(Level.SEVERE, null, ex);

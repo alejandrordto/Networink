@@ -1,6 +1,5 @@
 package datagrama521;
 
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -25,11 +24,6 @@ public class DatagramaClient {
                 socket.receive(packet);
                 String received = new String(packet.getData(), 0, packet.getLength());
                 System.out.println("Date: " + received);
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         } catch (SocketException ex) {
             Logger.getLogger(DatagramaClient.class.getName()).log(Level.SEVERE, null, ex);
